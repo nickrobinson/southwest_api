@@ -7,6 +7,7 @@
     "dependencies" : {
 	"request"    : "latest",
 	"cheerio"    : "latest",
-	"node-lambda": "latest"
+	"node-lambda": "latest",
+	"aws-sdk"    : "latest"
     }
 }
