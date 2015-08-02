@@ -9,5 +9,6 @@ This repo contains the code neccessary to setup your own Southwest Airlines API 
 	
 	npm install
 	./node_modules/.bin/node-lambda setup
-	./node_modules/.bin/node-lambda run
+	./node_modules/.bin/node-lambda run -h index.handler
+	./node_modules/.bin/node-lambda run -h cookie.handler
 	
