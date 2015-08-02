@@ -1,0 +1,12 @@
+{
+    "name"         : "southwest-scrape",
+    "version"      : "0.0.1",
+    "description"  : "Scrape the Southwest site",
+    "main"         : "server.js",
+    "author"       : "Nick Robinson",
+    "dependencies" : {
+	"request"    : "latest",
+	"cheerio"    : "latest",
+	"node-lambda": "latest"
+    }
+}
