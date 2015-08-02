@@ -1,8 +1,32 @@
 var cheerio = require('cheerio');
 var request = require('request');
+var AWS = require('aws-sdk');
 
 exports.handler = function(event, context) {
     console.log(event);
+
+    var dynamodb = new AWS.DynamoDB(options = {'region': 'us-east-1'});
+
+    var params = {
+	Key: {
+	    id: {
+		N: '1'
+	    }
+	},
+	TableName: 'cookies'
+    };
+
+    var cookie = [];
+    //Get the current cookie from dynamo
+    dynamodb.getItem(params, function(err, data) {
+	if(err) {
+	    context.fail(err);
+	} else {
+	    cookie = data;
+	    console.log(data);
+	}
+    });
+    
     var options = {
 	url: 'https://www.southwest.com/flight/search-flight.html',
 	followAllRedirects: true,
