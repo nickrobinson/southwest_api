@@ -2,6 +2,11 @@ var cheerio = require('cheerio');
 var request = require('request');
 var AWS = require('aws-sdk');
 
+var event = {};
+event["origin"] = process.argv[3];
+event["destination"] = process.argv[4];
+event["date"] = process.argv[5];
+
 exports.handler = function(event, context) {
     console.log(event);
 
@@ -67,12 +72,13 @@ exports.handler = function(event, context) {
 	//console.log('REQUEST RESULTS:', error, response.statusCode);
 
 	if(!error && response.statusCode == 200){
-	    var json = {price: "", departureTime: "", arrivalTime: "", flightNum: ""};
 	    
 	    var $ = cheerio.load(html);
 
 	    $('#faresOutbound tbody').children().each(function() {
 		var data = $('.product_price', this);
+		var json = {price: "", departureTime: "", arrivalTime: "", flightNum: "", layover: ""};
+		
 		json.price = data.last().text().trim();
 
 		if(json.price.length === 0) {
@@ -87,23 +93,33 @@ exports.handler = function(event, context) {
 		json.departureTime += data.first().text().trim();
 		json.arrivalTime += data.eq(1).text().trim();
 
-		data = $('.flight_column .bugText', this);
+		data = $('.flight_column .bugLinkText', this);
 		flight_re = /\d+/;
-		json.flightNum = data.first().text().trim().match(flight_re);
+		json.flightNum = data.first().text().trim().match(flight_re)[0];
+
+		data = $('.search-results--flight-stops', this);
+		city_re = /[A-Z]{3}/;
+		if (data.first().text().length !== 0) {
+		    json.layover = data.first().text().match(city_re)[0];
+		}
 
 		if (data.eq(1).length !== 0) {
 		    json.flightNum += "/";
-		    json.flightNum += data.eq(1).text().trim().match(flight_re);
+		    json.flightNum += data.eq(1).text().match(flight_re);
 		}
 
-		console.log(flights);
 		flights.push(json);
 	    });
-
-	    context.done(null, flights);
+	    
+	    if (process.argv[2] !== "local") {
+		context.done(null, flights);
+	    } else {
+		console.log(flights);
+	    }
 	    
 	} else {
 	    console.log("ERROR");
 	}
     });
 };
+
