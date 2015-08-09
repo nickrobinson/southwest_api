@@ -38,6 +38,8 @@ paths:
             $ref: '#/definitions/Flight'
       tags:
         - Flights
+      security:
+        - api_key: []
       responses:
         200:
           description: An array of flight results
