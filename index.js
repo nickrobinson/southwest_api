@@ -3,9 +3,12 @@ var request = require('request');
 var AWS = require('aws-sdk');
 
 var event = {};
-event["origin"] = process.argv[3];
-event["destination"] = process.argv[4];
-event["date"] = process.argv[5];
+
+if (process.argv[2] !== "local") {
+    event["origin"] = process.argv[3];
+    event["destination"] = process.argv[4];
+    event["date"] = process.argv[5];
+}
 
 exports.handler = function(event, context) {
     console.log(event);
@@ -100,7 +103,10 @@ exports.handler = function(event, context) {
 		data = $('.search-results--flight-stops', this);
 		city_re = /[A-Z]{3}/;
 		if (data.first().text().length !== 0) {
-		    json.layover = data.first().text().match(city_re)[0];
+		    var match = data.first().text().match(city_re);
+		    if (match) {
+			json.layover = match[0];
+		    }
 		}
 
 		if (data.eq(1).length !== 0) {

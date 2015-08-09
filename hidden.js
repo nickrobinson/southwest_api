@@ -7,13 +7,14 @@ airports = {
 }
 
 for (var i = 0; i < airports["BHM"]["routesServed"].length; i++) {
+    
     var options = {
 	url: "https://bqkfahgo2a.execute-api.us-east-1.amazonaws.com/prod/flight",
 	method: 'POST',
 	body: {
 	    "origin": "BHM",
 	    "destination": airports["BHM"]["routesServed"][i],
-	    "date": "08/23/2015"
+	    "date": "09/04/2015"
 	},
 	json: true
     };
